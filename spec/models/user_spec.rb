@@ -23,6 +23,7 @@ describe User do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
 
 
@@ -64,9 +65,9 @@ describe User do
 	  	user_with_same_email = @user.dup
 	  	user_with_same_email.email = @user.email.upcase
 	  	user_with_same_email.save
-	end
+	   end
 
-	it { should_not be_valid }
+	   it { should_not be_valid }
 
   end
 
@@ -94,9 +95,9 @@ describe User do
     before { @user.save }
     let(:found_user) { User.find_by_email(@user.email) }
 
-	describe "with valid password" do
-	  it { should == found_user.authenticate(@user.password) }
-	end
+  	describe "with valid password" do
+  	  it { should == found_user.authenticate(@user.password) }
+  	end
 
     describe "with invalid password" do
       let(:user_for_invalid_password) { found_user.authenticate("invalid") }
@@ -104,6 +105,11 @@ describe User do
       it { should_not == user_for_invalid_password }
       specify { user_for_invalid_password.should be_false }
     end
+  end
+
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
   end
 end
 
